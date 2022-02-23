@@ -162,6 +162,12 @@
             focusY = 0;
             secret = wordlist[Math.floor(Math.random() * wordlist.length)];
 
+            var keys = "qwertyuiopasdfghjklzxcvbnm";
+            for(var i=0; i<keys.length; i++){
+                $(`#key_${keys[i]}`).css("color", "white");
+                $(`#key_${keys[i]}`).css("backgroundColor", "transparent");
+            }
+
             var title = titles[Math.floor(Math.random() * titles.length)];
             $("#title").text(title);
             document.title = title;
