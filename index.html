@@ -39,6 +39,19 @@
             text-align: center;
             font-size: large;
         }
+        #keyboard{
+            border: none;
+            border-radius: 0;
+        }
+        #keyboard td{
+            border-radius: 0;
+        }
+        #key_2{
+            transform: translate(25px);
+        }
+        #key_3{
+            transform: translate(50px);
+        }
         button{
             display: block;
             margin: auto;
@@ -78,6 +91,41 @@
         <h1 id="title">Wordlee?</h1>
         <br><hr><br>
         <table id="board">
+        </table>
+        <br><hr><br>
+        <table id="keyboard">
+            <tr id="key_1">
+                <td id="key_q">Q</td>
+                <td id="key_w">W</td>
+                <td id="key_e">E</td>
+                <td id="key_r">R</td>
+                <td id="key_t">T</td>
+                <td id="key_y">Y</td>
+                <td id="key_u">U</td>
+                <td id="key_i">I</td>
+                <td id="key_o">O</td>
+                <td id="key_p">P</td>
+            </tr>
+            <tr id="key_2">
+                <td id="key_a">A</td>
+                <td id="key_s">S</td>
+                <td id="key_d">D</td>
+                <td id="key_f">F</td>
+                <td id="key_g">G</td>
+                <td id="key_h">H</td>
+                <td id="key_j">J</td>
+                <td id="key_k">K</td>
+                <td id="key_l">L</td>
+            </tr>
+            <tr id="key_3">
+                <td id="key_z">Z</td>
+                <td id="key_x">X</td>
+                <td id="key_c">C</td>
+                <td id="key_v">V</td>
+                <td id="key_b">B</td>
+                <td id="key_n">N</td>
+                <td id="key_m">M</td>
+            </tr>
         </table>
         <br><hr><br>
         <div>
@@ -154,14 +202,26 @@
                         if(secret[i] == $(`#${i}_${focusY}`).text()){
                             $(`#${i}_${focusY}`).css("color", "black");
                             $(`#${i}_${focusY}`).css("backgroundColor", "lightgreen");
+                            $(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("color", "black");
+                            $(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor", "lightgreen");
                         }
                         else if(secret.includes($(`#${i}_${focusY}`).text())){
                             $(`#${i}_${focusY}`).css("color", "black");
                             $(`#${i}_${focusY}`).css("backgroundColor", "lightsalmon");
+                            if($(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor") != "rgb(144, 238, 144)"){
+                                console.log($(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor"));
+                                $(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("color", "black");
+                                $(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor", "lightsalmon");
+                            }
                         }
                         else{
                             $(`#${i}_${focusY}`).css("color", "black");
                             $(`#${i}_${focusY}`).css("backgroundColor", "lightgrey");
+                            if($(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor") != "rgb(144, 238, 144)"){
+                                console.log($(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor"));
+                                $(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("color", "black");
+                                $(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor", "lightgrey");
+                            }
                         }
                     }
                     focusY++;
