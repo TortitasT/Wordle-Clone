@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordlee?</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
+    <script src="node_modules/confetti-js/dist/index.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body{
+            background-color: #181818;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        main{
+            width: 500px;
+            margin: auto;
+        }
+        h1{
+            margin: auto;
+            font-size: xx-large;
+            text-align: center;
+        }
+        table{
+            border: 2px solid #404040;
+            border-collapse: separate;
+            border-radius: 1em;
+            overflow: hidden;
+            margin: auto;
+        }
+        table td{
+            border: 2px solid gray;
+            border-radius: 1em;
+            overflow: hidden;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: large;
+        }
+        button{
+            display: block;
+            margin: auto;
+            border: 2px solid lightgoldenrodyellow;
+            border-radius: 1em;
+            background-color: transparent;
+            color: lightgoldenrodyellow;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: large;
+            font-family: Arial, Helvetica, sans-serif;
+            transition: 0.5s;
+        }
+        button:hover{
+            background-color: lightgoldenrodyellow;
+            color: black;
+        }
+        #canvas{
+            position:absolute;
+            left:0;
+            top:0;
+            width: 100vw;
+            height: 100vh;
+            z-index:-1;
+        }
+        #focusme{
+            position: absolute;
+            left: -200px;
+            top: 0px;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <canvas id="canvas"></canvas>
+        <h1 id="title">Wordlee?</h1>
+        <br><hr><br>
+        <table id="board">
+        </table>
+        <br><hr><br>
+        <div>
+            <button id="retry_btn" onclick="GenerateTable()"><i class="bi bi-arrow-counterclockwise"></i></button>
+            <input type="text" id="focusme">
+        </div>
+    </main>
+    <script src="wordlist.js"></script>
+    <script>
+        var focusX = 0;
+        var focusY = 0;
+        var secret = "";
+        var canType = true;
+        var confettiSettings = { target: 'canvas' };
+        var confetti = new ConfettiGenerator(confettiSettings);
+
+        function CreateInto(tag, parent){
+            temp = document.createElement(tag);
+            parent.appendChild(temp);
+            return temp;
+        }
+        function ClearTable(){
+            $("#board").empty();
+        }
+        function GenerateTable(){
+            document.getElementById("focusme").focus();
+
+            $("#retry_btn").blur();
+            confetti.clear();
+            confettiSettings = { target: 'canvas' };
+            confetti = new ConfettiGenerator(confettiSettings);
+            canType = true;
+            focusX = 0;
+            focusY = 0;
+            secret = wordlist[Math.floor(Math.random() * wordlist.length)];
+
+            var title = titles[Math.floor(Math.random() * titles.length)];
+            $("#title").text(title);
+            document.title = title;
+            
+            ClearTable();
+
+            //Rows
+            for(var i=0; i<6; i++){
+                tr = CreateInto("tr", document.getElementById("board"));
+
+                //Columns
+                for(var i2=0; i2<5; i2++){
+                    td = CreateInto("td", tr);
+                    td.id = `${i2}_${i}`;
+                }
+            }
+        }
+        function Type(letter){
+            $(`#${focusX}_${focusY}`).text(letter);
+            if(focusX<=4){
+                focusX++;
+            }
+        }
+        function Backspace(){
+            if(focusX>0){
+                focusX--;
+            }
+            $(`#${focusX}_${focusY}`).text("");
+        }
+        function Try(){
+            var line = $(`#0_${focusY}`).text() + $(`#1_${focusY}`).text() + $(`#2_${focusY}`).text() + $(`#3_${focusY}`).text() + $(`#4_${focusY}`).text();
+            if(line.length == 5 && wordlist.includes(line)){
+                console.log(line);
+                if(line == secret){
+                    Win();
+                }else{
+                    for(var i=0; i<5; i++){
+                        if(secret[i] == $(`#${i}_${focusY}`).text()){
+                            $(`#${i}_${focusY}`).css("color", "black");
+                            $(`#${i}_${focusY}`).css("backgroundColor", "lightgreen");
+                        }
+                        else if(secret.includes($(`#${i}_${focusY}`).text())){
+                            $(`#${i}_${focusY}`).css("color", "black");
+                            $(`#${i}_${focusY}`).css("backgroundColor", "lightsalmon");
+                        }
+                        else{
+                            $(`#${i}_${focusY}`).css("color", "black");
+                            $(`#${i}_${focusY}`).css("backgroundColor", "lightgrey");
+                        }
+                    }
+                    focusY++;
+                    focusX=0;
+                }
+            }
+        }
+        function Win(){
+            console.log("Winner");
+            for(var i=0; i<5; i++){
+                $(`#${i}_${focusY}`).css("color", "black");
+                $(`#${i}_${focusY}`).css("backgroundColor", "lightgreen");
+            }
+            canType = false;
+            confetti.render();
+            $("#title").text("You Win!!");
+        }
+
+        window.onload = Start;
+        
+        function Start(){
+            GenerateTable();
+
+            document.addEventListener('keydown', function(e){
+                if(e.keyCode <= 90 && e.keyCode >= 65 && canType){
+                    console.log(`Pressed: ${e.key}`);
+                    console.log(`#${focusX}_${focusY}`);
+                    Type(e.key.toUpperCase());
+                }
+                else if(e.keyCode == 8 && canType){
+                    Backspace();
+                }
+                else if(e.keyCode == 13 && canType){
+                    Try();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
