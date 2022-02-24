@@ -38,6 +38,7 @@
             height: 50px;
             text-align: center;
             font-size: large;
+            transition: all 0.25s;
         }
         #keyboard{
             border: none;
@@ -45,6 +46,7 @@
         }
         #keyboard td{
             border-radius: 0;
+            transition: all 0.5s;
         }
         #key_2{
             transform: translate(25px);
@@ -151,29 +153,39 @@
             $("#board").empty();
         }
         function GenerateTable(){
+            //A try at mobile integration nvm
             document.getElementById("focusme").focus();
 
+            //Unfocus retry button
             $("#retry_btn").blur();
+
+            //Restart Confetti
             confetti.clear();
             confettiSettings = { target: 'canvas' };
             confetti = new ConfettiGenerator(confettiSettings);
+
+            //Restart variables
             canType = true;
             focusX = 0;
             focusY = 0;
             secret = wordlist[Math.floor(Math.random() * wordlist.length)];
 
+            //Restart keyboard
             var keys = "qwertyuiopasdfghjklzxcvbnm";
             for(var i=0; i<keys.length; i++){
                 $(`#key_${keys[i]}`).css("color", "white");
                 $(`#key_${keys[i]}`).css("backgroundColor", "transparent");
             }
 
+            //Choose random title
             var title = titles[Math.floor(Math.random() * titles.length)];
             $("#title").text(title);
             document.title = title;
             
+            //Clear table
             ClearTable();
 
+            //Generate table
             //Rows
             for(var i=0; i<6; i++){
                 tr = CreateInto("tr", document.getElementById("board"));
@@ -246,11 +258,14 @@
             $("#title").text("You Win!!");
         }
 
+        //Events
         window.onload = Start;
-        
+
         function Start(){
+            //Generate table
             GenerateTable();
 
+            //Listen for keypresses
             document.addEventListener('keydown', function(e){
                 if(e.keyCode <= 90 && e.keyCode >= 65 && canType){
                     console.log(`Pressed: ${e.key}`);
