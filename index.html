@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=0.7">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wordlee?</title>
     <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
     <script src="node_modules/confetti-js/dist/index.min.js"></script>
@@ -17,6 +17,11 @@
         main{
             width: 500px;
             margin: auto;
+        }
+        @media only screen and (max-width: 600px) {
+            main{
+                width: 90vw;
+            }
         }
         h1{
             margin: auto;
@@ -68,6 +73,14 @@
         #key_3{
             transform: translate(50px);
             z-index: 0;
+        }
+        @media only screen and (max-width: 600px) {
+            #key_2{
+                transform: translate(0px);
+            }
+            #key_3{
+                transform: translate(0px);
+            }
         }
         button{
             display: block;
