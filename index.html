@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=0.7">
     <title>Wordlee?</title>
     <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
     <script src="node_modules/confetti-js/dist/index.min.js"></script>
@@ -52,11 +52,12 @@
             /*background-color: #181818;
             border: 2px solid grey;
             border-radius: 0em;*/
-            color: grey;
+            color: black;
+            font-size: 12pt;
+            font-style: italic;
 
             position: absolute;
-            z-index: 100;
-            transform: translate(-5px,15px);
+            transform: translate(-5px,-15px);
             visibility: hidden;
             transition: all 0.5s;
         }
@@ -141,12 +142,14 @@
                 <td id="key_b">B<span id="ked_b">x2</span></td>
                 <td id="key_n">N<span id="ked_n">x2</span></td>
                 <td id="key_m">M<span id="ked_m">x2</span></td>
+
+                <td id="key_en"><i class="bi bi-arrow-return-left"></i></td>
+                <td id="key_ba"><i class="bi bi-backspace"></i></td>
             </tr>
         </table>
         <br><hr><br>
         <div>
             <button id="retry_btn" onclick="GenerateTable()"><i class="bi bi-arrow-counterclockwise"></i></button>
-            <input type="text" id="focusme">
         </div>
     </main>
     <script src="wordlist.js"></script>
@@ -167,9 +170,6 @@
             $("#board").empty();
         }
         function GenerateTable(){
-            //A try at mobile integration nvm
-            document.getElementById("focusme").focus();
-
             //Unfocus retry button
             $("#retry_btn").blur();
 
@@ -189,6 +189,27 @@
             for(var i=0; i<keys.length; i++){
                 $(`#key_${keys[i]}`).css("color", "white");
                 $(`#key_${keys[i]}`).css("backgroundColor", "transparent");
+
+                //Mobile keyboard typing
+                $(`#key_${keys[i]}`).data("key", keys[i]);
+                $(`#key_${keys[i]}`).on("click", function(){
+                    if(canType){
+                        Type($(event.target).data("key").toUpperCase());
+                    }
+                });
+
+                //Enter key
+                $(`#key_en`).on("click", function(){
+                    if(canType){
+                        Try();
+                    }
+                });
+                //Enter key
+                $(`#key_ba`).on("click", function(){
+                    if(canType){
+                        Backspace();
+                    }
+                });
             }
             for(var i=0; i<keys.length; i++){
                 $(`#ked_${keys[i]}`).css("visibility", "hidden");

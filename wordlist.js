@@ -8,6 +8,7 @@ titles=[
     'Worlo¿',
 ];
 wordlist = [
+    'MBMAN',
     'MAMAL',
     'ABACK',
     'ABASE',
