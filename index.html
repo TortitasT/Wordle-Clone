@@ -167,10 +167,14 @@
     </main>
     <script src="wordlist.js"></script>
     <script>
+        //Pointers for where on the table the cursor is
         var focusX = 0;
         var focusY = 0;
+        //Secret variable holds solution
         var secret = "";
+        //canType is used when the game ends to stop player from typing
         var canType = true;
+        //Initialize confetti
         var confettiSettings = { target: 'canvas' };
         var confetti = new ConfettiGenerator(confettiSettings);
 
@@ -210,20 +214,20 @@
                         Type($(event.target).data("key").toUpperCase());
                     }
                 });
-
-                //Enter key
-                $(`#key_en`).on("click", function(){
-                    if(canType){
-                        Try();
-                    }
-                });
-                //Enter key
-                $(`#key_ba`).on("click", function(){
-                    if(canType){
-                        Backspace();
-                    }
-                });
             }
+            //Enter key
+            $(`#key_en`).on("click", function(){
+                if(canType){
+                    Try();
+                }
+            });
+            //Backspace key
+            $(`#key_ba`).on("click", function(){
+                if(canType){
+                    Backspace();
+                }
+            });
+            //Hide duplicate indicators
             for(var i=0; i<keys.length; i++){
                 $(`#ked_${keys[i]}`).css("visibility", "hidden");
             }
@@ -262,12 +266,16 @@
         }
         function Try(){
             var line = $(`#0_${focusY}`).text() + $(`#1_${focusY}`).text() + $(`#2_${focusY}`).text() + $(`#3_${focusY}`).text() + $(`#4_${focusY}`).text();
+            //If the line is complete and the word is on the dictionary
             if(line.length == 5 && wordlist.includes(line)){
-                console.log(line);
+                // console.log(line);
+                //If the word is the same as the secret one Win
                 if(line == secret){
                     Win();
                 }else{
+                    //For each letter on the word
                     for(var i=0; i<5; i++){
+                        //If that position on secret is the same as this one
                         if(secret[i] == $(`#${i}_${focusY}`).text()){
                             $(`#${i}_${focusY}`).css("color", "black");
                             $(`#${i}_${focusY}`).css("backgroundColor", "lightgreen");
@@ -277,11 +285,11 @@
                                 $(`#ked_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("visibility", "visible");
                             }
                         }
+                        //If secret includes current position
                         else if(secret.includes($(`#${i}_${focusY}`).text())){
                             $(`#${i}_${focusY}`).css("color", "black");
                             $(`#${i}_${focusY}`).css("backgroundColor", "lightsalmon");
                             if($(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor") != "rgb(144, 238, 144)"){
-                                console.log($(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor"));
                                 $(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("color", "black");
                                 $(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor", "lightsalmon");
                             }
@@ -294,12 +302,12 @@
                             $(`#${i}_${focusY}`).css("color", "black");
                             $(`#${i}_${focusY}`).css("backgroundColor", "lightgrey");
                             if($(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor") != "rgb(144, 238, 144)"){
-                                console.log($(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor"));
                                 $(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("color", "black");
                                 $(`#key_${$(`#${i}_${focusY}`).text().toLowerCase()}`).css("backgroundColor", "lightgrey");
                             }
                         }
                     }
+                    //Go to next line
                     focusY++;
                     focusX=0;
                 }
@@ -326,8 +334,8 @@
             //Listen for keypresses
             document.addEventListener('keydown', function(e){
                 if(e.keyCode <= 90 && e.keyCode >= 65 && canType){
-                    console.log(`Pressed: ${e.key}`);
-                    console.log(`#${focusX}_${focusY}`);
+                    // console.log(`Pressed: ${e.key}`);
+                    // console.log(`#${focusX}_${focusY}`);
                     Type(e.key.toUpperCase());
                 }
                 else if(e.keyCode == 8 && canType){
